@@ -17,9 +17,24 @@ app.use(
 app.use(express.json());
 
 //#region API ROUTES
-
+const {adminRouter} = require('./routers')
 // ===========================
 // NOTE : Add your routes here
+app.use('/admin', adminRouter)
+
+// ### Sequelize Synchronous
+const Sequelize = require('sequelize');
+const Models = require('./models');
+Models.sequelize.sync({
+    force : false,
+    alter: true,
+    logging : console.log
+}).then(function () {
+    console.log('Database is Synchronized!')
+
+}).catch(function (err) {
+    console.log(err, "Something Went Wrong with Database Update!")
+});
 
 app.get("/api", (req, res) => {
   res.send(`Hello, this is my API`);
